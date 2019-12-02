@@ -1,13 +1,3 @@
-const REQUEST_STATUSES = {
-  TRIGGER: 'TRIGGER',
-  FULFILL: 'FULFILL',
-  REQUEST: 'REQUEST',
-  SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE'
-};
-
-const { TRIGGER, REQUEST, SUCCESS, FULFILL, FAILURE } = REQUEST_STATUSES;
-
 function replaceEndpointPlaceholders(params) {
   const endpoint = '/accounts/:accountID/branch/:branchID';
   let renewedEndpoint = endpoint;
