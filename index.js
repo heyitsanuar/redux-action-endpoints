@@ -1,5 +1,4 @@
-function replaceEndpointPlaceholders(params) {
-  const endpoint = '/accounts/:accountID/branch/:branchID';
+function replaceEndpointPlaceholders(params, endpoint) {
   let renewedEndpoint = endpoint;
 
   Object.entries(params).forEach(element => {
@@ -10,11 +9,6 @@ function replaceEndpointPlaceholders(params) {
 
   return renewedEndpoint;
 }
-
-const renewedEndpoint = replaceEndpointPlaceholders({
-  accountID: 1,
-  branchID: 3
-});
 
 function typeGenerator(type) {
   return {
@@ -35,17 +29,18 @@ function actionGenerator(type) {
   };
 }
 
-function createRoutine(type) {
+export function createRoutine(type, endpoint = '') {
   const types = typeGenerator(type);
 
   return {
     ...types,
-    trigger: actionGenerator(types.TRIGGER),
-    fulfill: actionGenerator(types.FULFILL),
-    success: actionGenerator(type.SUCCESS),
-    failure: actionGenerator(type.FAILURE),
-    request: actionGenerator(type.REQUEST)
+    trigger: payload => actionGenerator(types.TRIGGER, payload),
+    fulfill: payload => actionGenerator(types.FULFILL, payload),
+    success: payload => actionGenerator(type.SUCCESS, payload),
+    failure: payload => actionGenerator(types.FAILURE, payload),
+    request: payload => actionGenerator(types.REQUEST, payload),
+    getEndpoint: params => replaceEndpointPlaceholders(params, endpoint)
   };
 }
 
-console.log(createRoutine('FETCH_USER'));
+const fetchAccountsAction = createRoutine('FETCH_ACCOUNTS', '/accounts/:id');
